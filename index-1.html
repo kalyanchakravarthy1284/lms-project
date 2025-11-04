@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Learning Platform</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
+
+    header {
+      background-color: #3498db;
+      color: #fff;
+      text-align: center;
+      padding: 1em;
+    }
+
+    main {
+      padding: 20px;
+    }
+
+    .container {
+      width: 80%;
+      margin: 0 auto;
+    }
+
+    .card {
+      background-color: #fff;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 10px 20px;
+      font-size: 16px;
+      text-align: center;
+      text-decoration: none;
+      background-color: #3498db;
+      color: #fff;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .profile-button {
+      position: absolute;
+      top: 75px;
+      right: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 60px;
+      height: 30px;
+      border-radius: 10%;
+      background-color: #fff;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      text-decoration: none;
+      color: #000;
+    }
+
+    .logout-button {
+      position: absolute;
+      top: 75px;
+      left: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 60px;
+      height: 30px;
+      border-radius: 10%;
+      background-color: #fff;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      text-decoration: none;
+      color: #000;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Learning Platform</h1>
+  </header>
+
+  <main class="container">
+    <section>
+      <div class="card">
+        <h2>Learners</h2>
+        <p>Welcome to the learning platform! Access courses, resources, and track your progress.</p>
+        <a href="#" class="profile-button" id="profileLink">Profile</a>
+        <a href="courses.html" class="button">Explore Courses</a>
+        <a href="join-class.html" class="button">Live Sessions</a>
+      </div>
+    </section>
+  </main>
+
+  <a href="https://eu-north-1ifynk6kmt.auth.eu-north-1.amazoncognito.com/logout?client_id=43nmb21trrq705tpmr3tijpmar&logout_uri=http%3A%2F%2Flocalhost%3A8000%2Findex-4.html" class="logout-button">Log out</a>
+
+  <script>
+    // Extract Cognito code from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get("code");
+
+    if (code) {
+      console.log("Authorization code:", code);
+      localStorage.setItem("auth_code", code);
+
+      // Update profile page link with code
+      const profileLink = document.getElementById("profileLink");
+      profileLink.href = `profile.html?code=${encodeURIComponent(code)}`;
+    } else {
+      console.warn("No code in URL — using stored code if available.");
+      const savedCode = localStorage.getItem("auth_code");
+      if (savedCode) {
+        const profileLink = document.getElementById("profileLink");
+        profileLink.href = `profile.html?code=${encodeURIComponent(savedCode)}`;
+      } else {
+        alert("No authorization code found. Please log in again.");
+        window.location.href = "index.html";
+      }
+    }
+  </script>
+</body>
+</html>

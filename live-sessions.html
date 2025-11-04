@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Create Live Class</title>
+<style>
+  body { 
+    font-family: 'Segoe UI', sans-serif; 
+    background: #f7f8fb; 
+    display:flex; 
+    align-items:center; 
+    justify-content:center; 
+    height:100vh; 
+    margin:0;
+  }
+  .card { 
+    background:#fff; 
+    width:460px; 
+    padding:28px; 
+    border-radius:12px; 
+    box-shadow:0 8px 30px rgba(23,33,77,0.08);
+    position: relative;
+  }
+  h2{margin:0 0 12px; color:#333;}
+  label{display:block;margin-top:12px;color:#555;font-size:14px;}
+  input, textarea {
+    width:100%; 
+    padding:10px; 
+    margin-top:6px; 
+    border:1px solid #e2e8f0; 
+    border-radius:8px; 
+    font-size:14px;
+  }
+  button{
+    margin-top:14px;
+    width:100%;
+    padding:12px;
+    border-radius:8px;
+    border:none;
+    background:#6a5acd;
+    color:#fff;
+    font-weight:600;
+    cursor:pointer;
+  }
+  .result{margin-top:12px}
+  .small{font-size:13px;color:#666;margin-top:6px}
+
+  /* 🔙 Back Button */
+  .back-btn {
+    display: inline-block;
+    background: #374151;
+    color: #fff;
+    padding: 8px 14px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 14px;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+  }
+  .back-btn:hover {
+    background: #111827;
+  }
+</style>
+</head>
+<body>
+<a href="index-2.html" class="back-btn">⬅ Back</a>
+
+<div class="card">
+  <h2>🎥 Create Live Class</h2>
+
+  <label>Class Name</label>
+  <input id="className" placeholder="Enter class name (e.g. Math - Algebra)" />
+
+  <label>Schedule Time</label>
+  <input id="scheduleTime" type="datetime-local" />
+
+  <label>Duration (minutes)</label>
+  <input id="duration" type="number" value="45" />
+
+  <button id="createBtn">Create</button>
+
+  <div id="result" class="result"></div>
+  <div class="small">After creation you'll get Join / Start buttons below.</div>
+</div>
+
+<script>
+const API_CREATE = "https://7hlihj33zg.execute-api.eu-north-1.amazonaws.com/prod/create-class"; // replace with your create-class endpoint
+
+document.getElementById("createBtn").onclick = async function() {
+  const name = document.getElementById("className").value.trim();
+  const schedule = document.getElementById("scheduleTime").value;
+  const duration = parseInt(document.getElementById("duration").value || "45",10);
+  const result = document.getElementById("result");
+
+  if (!name) { 
+    result.innerHTML = "<div style='color:#b30000'>Please enter a class name.</div>"; 
+    return; 
+  }
+
+  result.innerHTML = "⏳ Creating meeting...";
+
+  try {
+    const payload = { class_name: name, schedule_time: schedule, duration: duration };
+    const res = await fetch(API_CREATE, {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || JSON.stringify(data));
+
+    result.innerHTML = `
+      <div style="margin-top:8px"><b>Class:</b> ${name}</div>
+      <div style="margin-top:10px">
+        <a href="${data.join_url}" target="_blank" style="display:inline-block;padding:8px 12px;border-radius:6px;background:#28a745;color:#fff;text-decoration:none;margin-right:8px">Join Class</a>
+        <a href="${data.start_url}" target="_blank" style="display:inline-block;padding:8px 12px;border-radius:6px;background:#0b63d4;color:#fff;text-decoration:none">Start Class</a>
+      </div>
+      <div style="color:#077">Created Meeting ID: ${data.meetingId}</div>
+    `;
+    document.getElementById("className").value = "";
+    document.getElementById("scheduleTime").value = "";
+  } catch (err) {
+    result.innerHTML = `<div style='color:#b30000'>Error: ${err.message}</div>`;
+  }
+};
+</script>
+</body>
+</html>

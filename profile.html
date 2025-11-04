@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Learning Platform - Profile</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    .profile-container {
+      background-color: white;
+      border-radius: 15px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+      padding: 40px;
+      width: 380px;
+      text-align: center;
+      animation: fadeIn 0.6s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    h2 { color: #333; margin-bottom: 10px; }
+    p { color: #555; margin: 5px 0; }
+    #status { font-size: 14px; color: #777; margin-top: 10px; }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background 0.2s ease;
+    }
+    button:hover { background: #0056b3; }
+  </style>
+</head>
+<body>
+  <div class="profile-container" id="profileContainer">
+    <h2>Loading profile...</h2>
+    <p id="status">Please wait while we fetch your information.</p>
+  </div>
+
+  <script>
+    // === Configure API endpoint ===
+    const API_URL = "https://uun9dvum6i.execute-api.eu-north-1.amazonaws.com/prod/callback";
+
+    async function fetchProfile() {
+      const container = document.getElementById("profileContainer");
+      const urlParams = new URLSearchParams(window.location.search);
+      const code = urlParams.get("code");
+
+      // load saved values (if any)
+      const savedProfile = JSON.parse(localStorage.getItem("userProfile") || "null");
+      const savedCode = localStorage.getItem("authCode");
+
+      // If there's a code in the URL:
+      if (code) {
+        // If this code is different from the saved one -> try to fetch new profile
+        if (!savedCode || code !== savedCode) {
+          try {
+            const response = await fetch(`${API_URL}?code=${encodeURIComponent(code)}`);
+            const data = await response.json();
+
+            if (!response.ok) {
+              // don't overwrite existing savedProfile on fetch failure; show message
+              throw new Error(data.error || `Failed to fetch profile (status ${response.status})`);
+            }
+
+            const profile = data.profile || {};
+
+            // Save fetched profile and code persistently
+            localStorage.setItem("userProfile", JSON.stringify(profile));
+            localStorage.setItem("authCode", code);
+
+            // Remove code from URL so it won't be re-used on refresh / revisit
+            window.history.replaceState({}, document.title, window.location.pathname);
+
+            renderProfile(profile);
+            return;
+          } catch (err) {
+            console.error("Profile fetch error:", err);
+            // If we already have a saved profile, show it as a fallback
+            if (savedProfile) {
+              container.innerHTML = `
+                <h2>${savedProfile.name || "Unknown User"}</h2>
+                <p><strong>Email:</strong> ${savedProfile.email || "N/A"}</p>
+                <p><strong>Username:</strong> ${savedProfile.username || "N/A"}</p>
+                <p id="status">Could not refresh profile: ${err.message}. Showing stored profile.</p>
+                <button onclick="goToDashboard()">Go to Dashboard</button>
+              `;
+              // clear the URL code so page reload won't try to reuse it
+              window.history.replaceState({}, document.title, window.location.pathname);
+              return;
+            }
+
+            // No saved profile to fall back on
+            container.innerHTML = `
+              <h2>Failed to fetch profile.</h2>
+              <p id="status">${err.message}</p>
+              <button onclick="goToDashboard()">Go to Dashboard</button>
+            `;
+            // clear the URL code so user can try a fresh login later
+            window.history.replaceState({}, document.title, window.location.pathname);
+            return;
+          }
+        } else {
+          // code === savedCode -> this code was already used; do not call API (avoid 400)
+          // Remove the code param from URL and show stored profile if present
+          window.history.replaceState({}, document.title, window.location.pathname);
+
+          if (savedProfile) {
+            renderProfile(savedProfile);
+            return;
+          } else {
+            // Strange case: we have savedCode but no savedProfile -> treat as no profile
+            container.innerHTML = `
+              <h2>No profile found</h2>
+              <p id="status">Authorization code was already used and no stored profile exists. Please log in again.</p>
+              <button onclick="goToDashboard()">Go to Dashboard</button>
+            `;
+            return;
+          }
+        }
+      }
+
+      // If there's no code in URL:
+      if (!code && savedProfile) {
+        // Show stored profile
+        renderProfile(savedProfile);
+        return;
+      }
+
+      // No code and no saved profile -> ask user to login
+      container.innerHTML = `
+        <h2>No profile found</h2>
+        <p id="status">Please log in first to view your profile.</p>
+        <button onclick="goToDashboard()">Go to Dashboard</button>
+      `;
+    }
+
+    function renderProfile(profile) {
+      const container = document.getElementById("profileContainer");
+      container.innerHTML = `
+        <h2>${profile.name || "Unknown User"}</h2>
+        <p><strong>Email:</strong> ${profile.email || "N/A"}</p>
+        <p><strong>Username:</strong> ${profile.username || "N/A"}</p>
+        <button onclick="goToDashboard()">Go to Dashboard</button>
+      `;
+    }
+
+    function goToDashboard() {
+      window.location.href = "index-1.html";
+    }
+
+    // Run on load
+    fetchProfile();
+  </script>
+</body>
+</html>

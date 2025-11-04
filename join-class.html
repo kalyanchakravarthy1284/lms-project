@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Student Classes</title>
+<style>
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #f4f6fb;
+    margin: 0;
+    padding: 26px;
+  }
+  .wrap {
+    max-width: 1000px;
+    margin: auto;
+  }
+  h1 {
+    color: #123;
+    text-align: center;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 6px 24px rgba(15, 23, 42, 0.04);
+    text-align: center;
+  }
+  th, td {
+    padding: 12px 14px;
+    border-bottom: 1px solid #f1f3f8;
+  }
+  th {
+    background: #2563eb;
+    color: #fff;
+    cursor: pointer;
+    user-select: none;
+  }
+  th:hover {
+    background: #1d4ed8;
+  }
+  button {
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: none;
+    color: #fff;
+    background: #2563eb;
+    cursor: pointer;
+  }
+  button:hover {
+    background: #1d4ed8;
+  }
+  .back-btn {
+    display: inline-block;
+    background: #374151;
+    color: #fff;
+    padding: 8px 14px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 14px;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+  }
+  .back-btn:hover {
+    background: #111827;
+  }
+</style>
+</head>
+<body>
+<a href="index-1.html" class="back-btn">⬅ Back</a>
+
+<div class="wrap">
+  <h1>Available Classes</h1>
+  <table id="classesTable">
+    <thead>
+      <tr>
+        <th onclick="sortTable(0)">Class ⬍</th>
+        <th onclick="sortTable(1)">Schedule Time ⬍</th>
+        <th>Join</th>
+      </tr>
+    </thead>
+    <tbody id="tableBody"></tbody>
+  </table>
+</div>
+
+<script>
+const API_GET_STUDENT = "https://7hlihj33zg.execute-api.eu-north-1.amazonaws.com/prod/get-studentclasses";
+const API_ADD_ATT = "https://7hlihj33zg.execute-api.eu-north-1.amazonaws.com/prod/record-attendance";
+
+async function fetchClasses() {
+  try {
+    const res = await fetch(API_GET_STUDENT);
+    const data = await res.json();
+    const tbody = document.getElementById("tableBody");
+    tbody.innerHTML = "";
+
+    data.forEach(cls => {
+      const classId = cls.meetingId || cls.meeting_id || cls.class_id || cls.id || cls.classId || "Unknown";
+      const meetingId = cls.meetingId || cls.meeting_id || cls.class_id || cls.id || cls.classId || "Unknown";
+      const joinUrl = cls.join_url || "#";
+
+      let rawTime = cls.schedule_time || cls.created_at || "";
+      let formattedTime = rawTime;
+      if (rawTime.includes("T")) {
+        const [date, time] = rawTime.split("T");
+        formattedTime = `${date} ${time.substring(0,5)}`;
+      }
+
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${cls.class_name || "Untitled"}</td>
+        <td>${formattedTime}</td>
+        <td><button onclick="joinClass('${classId}', '${joinUrl.replace(/'/g, "\\'")}')">Join</button></td>
+      `;
+      tbody.appendChild(row);
+    });
+  } catch (e) {
+    document.getElementById("tableBody").innerHTML = "<tr><td colspan='3'>Error loading classes</td></tr>";
+  }
+}
+
+async function joinClass(classId, joinUrl) {
+  const studentName = prompt("Enter your name to mark attendance:");
+  if (!studentName) return;
+
+  const joinTimeIST = new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" });
+  console.log("Joining time (IST):", joinTimeIST);
+
+  const attendanceData = {
+    classId: classId,
+    studentName: studentName
+  };
+
+  try {
+    const res = await fetch(API_ADD_ATT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(attendanceData)
+    });
+
+    const result = await res.json();
+    if (res.ok) {
+      alert(`✅ Attendance marked at ${result.joinTimeIST}`);
+    } else {
+      alert(`⚠️ Error: ${result.error || "Failed to mark attendance"}`);
+    }
+  } catch (err) {
+    console.error("Attendance failed:", err);
+    alert("⚠️ Could not record attendance");
+  } finally {
+    if (joinUrl && joinUrl !== "#") {
+      window.open(joinUrl, "_blank");
+    }
+  }
+}
+
+function sortTable(columnIndex) {
+  const table = document.getElementById("classesTable");
+  const tbody = table.tBodies[0];
+  const rows = Array.from(tbody.querySelectorAll("tr"));
+  const ascending = table.dataset.sortOrder !== "asc";
+  table.dataset.sortOrder = ascending ? "asc" : "desc";
+
+  rows.sort((a, b) => {
+    const cellA = a.children[columnIndex].innerText.toLowerCase();
+    const cellB = b.children[columnIndex].innerText.toLowerCase();
+    if (cellA < cellB) return ascending ? -1 : 1;
+    if (cellA > cellB) return ascending ? 1 : -1;
+    return 0;
+  });
+
+  rows.forEach(row => tbody.appendChild(row));
+}
+
+fetchClasses();
+</script>
+</body>
+</html>

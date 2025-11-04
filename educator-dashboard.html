@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Educator Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body {
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+    }
+
+    header {
+        background-color: #3498db;
+        color: #fff;
+        text-align: center;
+        padding: 1em;
+    }
+
+    main {
+        padding: 20px;
+    }
+
+    section {
+        margin-bottom: 20px;
+    }
+
+    .container {
+        width: 80%;
+        margin: 0 auto;
+    }
+
+    .card {
+        background-color: #fff;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+    }
+
+    .button {
+        display: inline-block;
+        padding: 10px 20px;
+        font-size: 16px;
+        text-align: center;
+        text-decoration: none;
+        background-color: #3498db;
+        color: #fff;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    .course {
+        border: 1px solid #ccc;
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+    .aasrith{
+      color: #fff;
+    }
+    .logout-button{
+            position: absolute;
+            top: 75px; /* Adjust the top position to create a four-line gap */
+            left: 20px; /* Adjust the right position as needed */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 60px;
+            height: 30px; /* Adjust the height for square shape */
+	        border-radius: 10%;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            text-decoration: none;
+            color: #000;
+        }
+
+        .logout-button:hover {
+            background-color: #eee; /* Change background color on hover if desired */
+        }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Educator Dashboard</h1>
+    <a href="index-2.html" class="logout-button">Back</a>
+  </header>
+  
+  <main>
+    <section class="dashboard-options">
+      <h2>Manage Courses</h2>
+      <a href="course-creation.html" class="button">Create New Course</a>
+      <!-- Add more options for managing courses -->
+
+      <h2>Student Management</h2>
+      <a href="student-list.html" class="button">View Student List</a>
+      <a href="progress-list.html" class="button">View Progress List</a>
+      <!-- Add more options for managing students -->
+
+      <!-- Add more sections for additional functionalities -->
+    </section>
+  </main>
+  
+</body>
+</html>

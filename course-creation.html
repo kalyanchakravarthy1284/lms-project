@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Create a New Course</title>
+  <style>
+    body {
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+    }
+
+    header {
+        background-color: #3498db;
+        color: #fff;
+        text-align: center;
+        padding: 1em;
+    }
+
+    main {
+        padding: 20px;
+    }
+
+    section {
+        margin-bottom: 20px;
+    }
+
+    .container {
+        width: 80%;
+        margin: 0 auto;
+    }
+
+    .card {
+        background-color: #fff;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+    }
+
+    .button {
+        display: inline-block;
+        padding: 10px 20px;
+        font-size: 16px;
+        text-align: center;
+        text-decoration: none;
+        background-color: #3498db;
+        color: #fff;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    .course {
+        border: 1px solid #ccc;
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+    .aasrith{
+      color: #fff;
+    }
+    
+    .bharath{
+        color:#eee;
+    }
+  </style>
+</head>
+<body>
+  <header>
+
+    <h1>Create a New Course</h1>
+  </header>
+  
+  <main>
+
+    <form id="courseForm" class="course-form">
+      <label for="courseTitle">Course Title:</label><br>
+      <br>
+      <textarea id="courseTitle" name="courstitle" rows="2" cols="50"></textarea><br>
+      <br>
+  
+      <label for="courseDescription">Course Description:</label><br>
+      <br>
+      <textarea id="courseDescription" name="courseDescription" rows="4" cols="50"></textarea><br>
+      <br>
+      <label for="courseVideo">Course Video:</label><br>
+      <br>
+      <input type="file" id="courseVideo" name="courseVideo"><br>
+      <br>
+      <label for="courseMaterials">Course Materials:</label><br>
+      <br>
+      <input type="file" id="courseMaterials" name="courseMaterials" multiple><br>
+      <br>
+      <button type="button" onclick="createCourse()" class="button">Create Course</button>
+  </form>
+  
+  </main>
+
+  <script src="course-creation-script.js"></script> <!-- Link to course creation script -->
+</body>
+</html>

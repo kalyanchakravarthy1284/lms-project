@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Educator Classes</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: #f4f6fa;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      position: relative;
+      background: #4f46e5;
+      color: white;
+      padding: 16px;
+      text-align: center;
+      font-size: 1.5em;
+      font-weight: bold;
+    }
+    .top-left-btn {
+      position: absolute;
+      top: 50%;
+      left: 20px;
+      transform: translateY(-50%);
+      background: #10b981;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 8px 14px;
+      font-size: 14px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+    .top-left-btn:hover {
+      background: #059669;
+    }
+    table {
+      width: 95%;
+      margin: 30px auto;
+      border-collapse: collapse;
+      background: #fff;
+      box-shadow: 0 0 12px rgba(0,0,0,0.1);
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 12px;
+      text-align: center;
+    }
+    th {
+      background: #4f46e5;
+      color: white;
+    }
+    tr:nth-child(even) { background: #f9f9f9; }
+    button, a.btn {
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 6px 12px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    button:hover, a.btn:hover { background: #0056b3; }
+    .btn-att { background: #28a745; }
+    .btn-att:hover { background: #218838; }
+    #loading {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 18px;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    📚 Classes List
+    <a href="index-2.html" class="top-left-btn"> ← Back</a>
+  </header>
+
+  <div id="loading">Loading your classes...</div>
+
+  <table id="classTable" style="display:none;">
+    <thead>
+      <tr>
+        <th>Class Name</th>
+        <th>Schedule Time</th>
+        <th>Attendance</th>
+        <th>Join Link</th>
+        <th>Start Link</th>
+        <th>Created At</th>
+      </tr>
+    </thead>
+    <tbody id="tableBody"></tbody>
+  </table>
+
+  <script>
+    const API_GET_CLASSES = "https://7hlihj33zg.execute-api.eu-north-1.amazonaws.com/prod/get-classes";
+    const API_GET_ATT = "https://7hlihj33zg.execute-api.eu-north-1.amazonaws.com/prod/get-attendance";
+
+    async function fetchClasses() {
+      const table = document.getElementById("classTable");
+      const body = document.getElementById("tableBody");
+      const loading = document.getElementById("loading");
+
+      try {
+        const res = await fetch(API_GET_CLASSES);
+        const data = await res.json();
+
+        loading.style.display = "none";
+        if (!data.length) {
+          loading.textContent = "No classes found.";
+          return;
+        }
+
+        table.style.display = "table";
+        body.innerHTML = "";
+
+        for (const item of data) {
+          const classId = item.classId || item.meetingId || item.id || "Unknown";
+
+          // Fetch attendance count dynamically
+          let attendanceCount = 0;
+          try {
+            const attRes = await fetch(`${API_GET_ATT}?classId=${classId}`);
+            const attData = await attRes.json();
+            attendanceCount = attData.length || 0;
+          } catch (e) {
+            console.warn("Attendance fetch failed:", e);
+          }
+
+          let formattedTime = item.schedule_time || "";
+          if (formattedTime.includes("T")) {
+            const [date, time] = formattedTime.split("T");
+            formattedTime = `${date} ${time.substring(0,5)}`;
+          }
+
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${item.class_name || "Untitled"}</td>
+            <td>${formattedTime}</td>
+            <td>${attendanceCount}
+              <button class="btn-att" style="margin-left:8px" onclick="viewAttendance('${classId}')">View</button>
+            </td>
+            <td><a target="_blank" class="btn btn-join" href="${item.join_url}">Join</a></td>
+            <td><a target="_blank" class="btn btn-start" href="${item.start_url}">Start</a></td>
+            <td>${item.created_at ? new Date(item.created_at).toLocaleString() : ""}</td>
+          `;
+          body.appendChild(row);
+        }
+      } catch (e) {
+        loading.innerHTML = "Error: " + e.message;
+      }
+    }
+
+    function viewAttendance(classId) {
+      window.location.href = `attendance.html?classId=${classId}`;
+    }
+
+    fetchClasses();
+  </script>
+</body>
+</html>

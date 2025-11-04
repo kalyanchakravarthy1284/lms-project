@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning Platform</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            background-color: #3498db;
+            color: #fff;
+            text-align: center;
+            padding: 1em;
+        }
+
+        main {
+            padding: 20px;
+        }
+
+        section {
+            margin-bottom: 20px;
+        }
+
+        .container {
+            width: 80%;
+            margin: 0 auto;
+        }
+
+        .card {
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            text-align: center;
+            text-decoration: none;
+            background-color: #3498db;
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .course-container {
+  margin-bottom: 20px; /* Add margin between each course */
+}
+.logout-button{
+            position: absolute;
+            top: 75px; /* Adjust the top position to create a four-line gap */
+            left: 20px; /* Adjust the right position as needed */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 60px;
+            height: 30px; /* Adjust the height for square shape */
+	        border-radius: 10%;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            text-decoration: none;
+            color: #000;
+        }
+
+        .logout-button:hover {
+            background-color: #eee; /* Change background color on hover if desired */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Learning Platform</h1>
+        <a href="https://eu-north-1rubhwvv9p.auth.eu-north-1.amazoncognito.com/logout?client_id=390oqv1kqrc8h3k30nke0g4jps&logout_uri=http%3A%2F%2Flocalhost%3A8000%2Findex-4.html" class="logout-button">Log out</a>
+    </header>
+
+    <main class="container">
+        <section>
+            <div class="card">
+                <h2>Educators</h2>
+                <p>Teach and manage courses. Monitor learner progress and provide valuable feedback.</p>
+                <a href="course-creation.html" class="button">Manage Courses</a>
+                <a href="student-list.html" class="button">Student list</a>
+                <a href="classes.html" class="button">Classes</a>
+                <a href="live-sessions.html" class="button">Live Sessions</a>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
