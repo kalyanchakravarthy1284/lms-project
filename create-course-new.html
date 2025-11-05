@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create Course</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #eef2f7;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Back button outside the container, fixed at top-left */
+    .back-button {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      background: #2c3e50;
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 14px;
+      z-index: 1000;
+      transition: background 0.3s;
+    }
+    .back-button:hover {
+      background: #1a2735;
+    }
+
+    .container {
+      max-width: 600px;
+      background: #fff;
+      padding: 30px 25px;
+      border-radius: 12px;
+      margin: 80px auto 40px auto; /* add top margin for back button space */
+      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+      position: relative;
+    }
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 25px;
+    }
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 15px;
+      margin-bottom: 5px;
+    }
+    input, textarea, button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 6px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+    textarea {
+      resize: vertical;
+    }
+    button {
+      background: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: background 0.3s;
+      font-weight: bold;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    #status {
+      margin-top: 20px;
+      font-weight: bold;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <a href="courses.html" class="back-button">← Back</a>
+
+  <div class="container">
+    <h1>Create New Course</h1>
+
+    <label for="course-title">Course Title</label>
+    <input type="text" id="course-title" placeholder="Enter course title" required />
+
+    <label for="course-description">Description</label>
+    <textarea id="course-description" rows="4" placeholder="Enter description"></textarea>
+
+    <label for="educator-name">Educator Name</label>
+    <input type="text" id="educator-name" placeholder="Enter your name" required />
+
+    <label for="video-file">Course Video (MP4)</label>
+    <input type="file" id="video-file" accept="video/mp4" required />
+
+    <label for="material-file">Course Material (PDF)</label>
+    <input type="file" id="material-file" accept="application/pdf" required />
+
+    <button id="create-course-btn">Create Course</button>
+
+    <div id="status"></div>
+  </div>
+
+  <script>
+    const API_BASE = "https://yt99oehyg6.execute-api.eu-north-1.amazonaws.com/prod";
+
+    document.getElementById("create-course-btn").addEventListener("click", async () => {
+      const title = document.getElementById("course-title").value.trim();
+      const description = document.getElementById("course-description").value.trim();
+      const educator = document.getElementById("educator-name").value.trim();
+      const videoFile = document.getElementById("video-file").files[0];
+      const materialFile = document.getElementById("material-file").files[0];
+      const status = document.getElementById("status");
+
+      if (!title || !description || !educator || !videoFile || !materialFile) {
+        status.textContent = "⚠️ Please fill in all fields and select both files.";
+        status.style.color = "red";
+        return;
+      }
+
+      status.textContent = "⏳ Generating upload URLs...";
+      status.style.color = "black";
+
+      try {
+        const presignedRes = await fetch(`${API_BASE}/generate-presigned-url`, { method: "POST" });
+        if (!presignedRes.ok) throw new Error("Failed to generate presigned URLs");
+
+        const presignedData = await presignedRes.json();
+        const { course_id, urls } = presignedData;
+
+        status.textContent = "⏫ Uploading video...";
+        await fetch(urls.video.url, { method: "PUT", headers: { "Content-Type": "video/mp4" }, body: videoFile });
+
+        status.textContent = "⏫ Uploading material...";
+        await fetch(urls.material.url, { method: "PUT", headers: { "Content-Type": "application/pdf" }, body: materialFile });
+
+        const metadata = {
+          course_id: course_id,
+          title: title,
+          description: description,
+          educator: educator,
+          video_key: urls.video.key,
+          material_key: urls.material.key
+        };
+
+        status.textContent = "💾 Saving course metadata...";
+        const saveRes = await fetch(`${API_BASE}/upload-course`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(metadata)
+        });
+
+        const saveData = await saveRes.json();
+        if (!saveRes.ok) throw new Error(saveData.error || "Error saving course");
+
+        status.textContent = `✅ Course created successfully! (ID: ${course_id})`;
+        status.style.color = "green";
+
+      } catch (err) {
+        console.error("Error creating course:", err);
+        status.textContent = `❌ ${err.message}`;
+        status.style.color = "red";
+      }
+    });
+  </script>
+</body>
+</html>

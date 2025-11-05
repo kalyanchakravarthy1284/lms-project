@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student Courses</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
+    header {
+      background-color: #3498db;
+      color: #fff;
+      text-align: center;
+      padding: 1em;
+      position: relative;
+    }
+    .logout-button {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background-color: #fff;
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 12px;
+      cursor: pointer;
+      text-decoration: none;
+      font-size: 14px;
+    }
+    main {
+      padding: 20px;
+    }
+    .accordion {
+      background: #fff;
+      color: #2c3e50;
+      cursor: pointer;
+      padding: 15px;
+      width: 100%;
+      text-align: left;
+      border: none;
+      outline: none;
+      font-size: 18px;
+      transition: 0.4s;
+      border-radius: 5px;
+      margin-bottom: 10px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .accordion.active, .accordion:hover {
+      background: #3498db;
+      color: #fff;
+    }
+    .panel {
+      padding: 0 15px;
+      display: none;
+      background-color: #f9f9f9;
+      overflow: hidden;
+      border-radius: 0 0 5px 5px;
+      margin-bottom: 10px;
+    }
+    .card {
+      background-color: #fff;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      padding: 20px;
+      margin: 10px 0;
+    }
+    .button {
+      display: inline-block;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+      background-color: #3498db;
+      color: #fff;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Courses</h1>
+    <a href="index-1.html" class="logout-button">Back</a>
+  </header>
+
+  <main>
+    <!-- Free Courses Accordion -->
+    <button class="accordion">Free Courses</button>
+    <div class="panel">
+      <div class="card">
+        <h2>HTML</h2>
+        <p>Learn the basics of HTML for building web pages.</p>
+        <a href="course-content.html" class="button">Start</a>
+      </div>
+      <div class="card">
+        <h2>CSS</h2>
+        <p>Understand styling and layout with CSS.</p>
+        <a href="course-content-1.html" class="button">Start</a>
+      </div>
+      <div class="card">
+        <h2>JavaScript</h2>
+        <p>Make your web pages dynamic using JavaScript.</p>
+        <a href="course-content-2.html" class="button">Start</a>
+      </div>
+    </div>
+
+    <!-- Certified Courses Accordion -->
+    <button class="accordion">Certified Courses</button>
+    <div class="panel">
+      <div class="card">
+        <h2>Python</h2>
+        <p>Learn Python for general-purpose programming.</p>
+        <a href="https://www.coursera.org/learn/python" class="button" target="_blank">Start</a>
+      </div>
+      <div class="card">
+        <h2>C++</h2>
+        <p>Understand the fundamentals of C++ programming.</p>
+        <a href="https://www.coursera.org/learn/codio-cpp-basics" class="button" target="_blank">Start</a>
+      </div>
+    </div>
+
+    <!-- Uploaded Courses Accordion -->
+    <button class="accordion">Uploaded Courses</button>
+    <div class="panel dynamic-courses">
+      <p id="status-msg">Loading uploaded courses...</p>
+    </div>
+  </main>
+
+  <script src="course-display-scripts-new.js"></script>
+  <script>
+    // Accordion toggle functionality
+    const accordions = document.querySelectorAll(".accordion");
+    accordions.forEach(acc => {
+      acc.addEventListener("click", () => {
+        acc.classList.toggle("active");
+        const panel = acc.nextElementSibling;
+        panel.style.display = panel.style.display === "block" ? "none" : "block";
+      });
+    });
+  </script>
+</body>
+</html>

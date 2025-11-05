@@ -2,171 +2,62 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Courses</title>
+  <title>Educator Courses</title>
   <style>
-    body {
-        font-family: 'Arial', sans-serif;
-        margin: 0;
-        padding: 0;
-        background-color: #f4f4f4;
-    }
-
-    header {
-        background-color: #3498db;
-        color: #fff;
-        text-align: center;
-        padding: 1em;
-    }
-
-    main {
-        padding: 20px;
-    }
-
-    section {
-        margin-bottom: 20px;
-    }
-
-    .container {
-        width: 80%;
-        margin: 0 auto;
-    }
-
-    .card {
-        background-color: #fff;
-        border-radius: 5px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        padding: 20px;
-        margin-bottom: 20px;
-    }
-
-    /* Add styles for the buttons */
-    /* Styles for the buttons */
-.button {
-  display: inline-block;
-  padding: 10px 20px;
-  font-size: 16px;
-  text-align: center;
-  text-decoration: none;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-right: 10px; /* Adjust spacing between buttons */
-  background-color: #3498db; /* Blue color for Enroll button */
-  color: #fff; /* Text color for Enroll button */
-}
-
-/* Additional styles for the delete button */
-.delete-button {
-  display: inline-block;
-  padding: 10px 20px;
-  font-size: 16px;
-  text-align: center;
-  text-decoration: none;
-  border-radius: 5px;
-  cursor: pointer;
-  background-color: #ff6347; /* Red color for Delete button */
-  color: #fff; /* Text color for Delete button */
-}
-
-
-    .course {
-        border: 1px solid #ccc;
-        padding: 10px;
-        margin-bottom: 10px;
-    }
-    .aasrith{
-      color: #fff;
-    }
-    .profile-button{
-            position: absolute;
-            top: 75px; /* Adjust the top position to create a four-line gap */
-            right: 20px; /* Adjust the right position as needed */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 80px;
-            height: 30px; /* Adjust the height for square shape */
-	        border-radius: 10%;
-            background-color: #fff;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            cursor: pointer;
-            text-decoration: none;
-            color: #000;
-        }
-
-        .logout-button:hover {
-            background-color: #eee; /* Change background color on hover if desired */
-        }
-    .logout-button{
-            position: absolute;
-            top: 75px; /* Adjust the top position to create a four-line gap */
-            left: 20px; /* Adjust the right position as needed */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 60px;
-            height: 30px; /* Adjust the height for square shape */
-	        border-radius: 10%;
-            background-color: #fff;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            cursor: pointer;
-            text-decoration: none;
-            color: #000;
-        }
-
-        .logout-button:hover {
-            background-color: #eee; /* Change background color on hover if desired */
-        }
-    </style>
+    body { font-family: Arial, sans-serif; margin:0; padding:0; background:#f4f4f4; }
+    header { background:#2c3e50; color:#fff; text-align:center; padding:1em; position:relative; }
+    .logout-button, .add-course-button { position:absolute; top:20px; background:#fff; color:#000; border:none; border-radius:8px; padding:8px 12px; cursor:pointer; text-decoration:none; font-size:14px; }
+    .logout-button { left:20px; } 
+    .add-course-button { right:20px; }
+    main { padding:20px; }
+    .accordion { background:#fff; color:#2c3e50; cursor:pointer; padding:15px; width:100%; text-align:left; border:none; outline:none; font-size:18px; transition:0.4s; border-radius:5px; margin-bottom:10px; box-shadow:0 2px 4px rgba(0,0,0,0.1);}
+    .accordion.active, .accordion:hover { background:#3498db; color:#fff; }
+    .panel { padding:0 15px; display:none; background-color:#f9f9f9; overflow:hidden; border-radius:0 0 5px 5px; margin-bottom:10px; }
+    .card { background:#fff; border-radius:5px; box-shadow:0 2px 4px rgba(0,0,0,0.1); padding:15px; margin:10px 0; }
+    .button { display:inline-block; padding:8px 15px; font-size:14px; border-radius:5px; cursor:pointer; margin-top:10px; background:#2c3e50; color:#fff; text-decoration:none; }
+  </style>
 </head>
 <body>
   <header>
-    <h1>Available Courses</h1>
-    <a href="index-1.html" class="logout-button">Back</a>
+    <h1>Courses</h1>
+    <a href="index-2.html" class="logout-button">Back</a>
+    <a href="create-course-new.html" class="add-course-button">➕ Add Course</a>
   </header>
-  </header>
-  <a href="progress-creation.html" class="profile-button">Progress</a>
-  <br>
+
   <main>
-    <br>
-    <section class="course-list">
-      <h2>Free courses</h2>
-      <section>
-      <div class="card">
-        <h2>HTML</h2>
-        <p>The HyperText Markup Language or HTML is the standard markup language for documents designed to be displayed in a web browser. It defines the meaning and structure of web content. It is often assisted by technologies such as Cascading Style Sheets (CSS) and scripting languages such as JavaScript.</p><br>
-        <a href="course-content.html" onclick="enroll('HTML')" class="button">Start</a>
-      </div>
-    </section>
-      <div class="card">
-        <h2>CSS</h2>
-        <p>CSS is the acronym of “Cascading Style Sheets”. CSS is a computer language for laying out and structuring web pages (HTML or XML). This language contains coding elements and is composed of these “cascading style sheets” which are equally called CSS files.</p><br>
-        <a href="course-content-1.html" onclick="enroll('CSS')" class="button">Start</a>
-      </div>
-      <div class="card">
-        <h2>JavaScript</h2>
-        <p>JavaScript is a scripting language used to create and control dynamic website content, i.e. anything that moves, refreshes, or otherwise changes on your screen without requiring you to manually reload a web page. Features like: animated graphics. photo slideshows.</p><br>
-        <a href="course-content-2.html" onclick="enroll('JavaScript')" class="button">Start</a>
-      </div>
-    <h2>Certified courses</h2>
-    <div class="card">
-      <h2>Python</h2>
-      <p>Python is a high-level, general-purpose programming language. Its design philosophy emphasizes code readability with the use of significant indentation.</p><br>
-      <a href="https://www.coursera.org/learn/python" onclick="enroll('JavaScript')" class="button">Start</a>
+    <!-- Free Courses Accordion -->
+    <button class="accordion">Free Courses</button>
+    <div class="panel">
+      <div class="card"><h2>HTML</h2><p>Learn the basics of HTML for building web pages.</p><a href="course-content.html" class="button">Start</a></div>
+      <div class="card"><h2>CSS</h2><p>Understand styling and layout with CSS.</p><a href="course-content-1.html" class="button">Start</a></div>
+      <div class="card"><h2>JavaScript</h2><p>Make your web pages dynamic using JavaScript.</p><a href="course-content-2.html" class="button">Start</a></div>
     </div>
-    <div class="card">
-      <h2>C++</h2>
-      <p>C++ is a powerful and versatile programming language that's widely used for various applications, including system/application software, game development, embedded systems, and more. It's an extension of the C programming language and provides features like object-oriented programming (OOP) and generic programming.</p><br>
-      <a href="https://www.coursera.org/learn/codio-cpp-basics" onclick="enroll('JavaScript')" class="button">Start</a>
+
+    <!-- Certified Courses Accordion -->
+    <button class="accordion">Certified Courses</button>
+    <div class="panel">
+      <div class="card"><h2>Python</h2><p>Learn Python for general-purpose programming.</p><a href="https://www.coursera.org/learn/python" class="button" target="_blank">Start</a></div>
+      <div class="card"><h2>C++</h2><p>Understand the fundamentals of C++ programming.</p><a href="https://www.coursera.org/learn/codio-cpp-basics" class="button" target="_blank">Start</a></div>
     </div>
-      <!-- More Course Entries -->
-    </section>
+
+    <!-- Dynamic Uploaded Courses Accordion -->
+    <button class="accordion">Uploaded Courses</button>
+    <div class="panel dynamic-courses">
+      <p id="status-msg">Loading uploaded courses...</p>
+    </div>
   </main>
-  <main>
-    <section class="course-list">
-      <!-- This section will be populated dynamically with created courses -->
-    </section>
-  </main>
- 
-  <script src="courses-display-script.js"></script> <!-- Link to courses display script -->
+
+  <script src="course-display-scripts-new.js"></script>
+  <script>
+    // Accordion toggle functionality
+    const accordions = document.querySelectorAll(".accordion");
+    accordions.forEach(acc => {
+      acc.addEventListener("click", () => {
+        acc.classList.toggle("active");
+        const panel = acc.nextElementSibling;
+        panel.style.display = panel.style.display === "block" ? "none" : "block";
+      });
+    });
+  </script>
 </body>
 </html>
