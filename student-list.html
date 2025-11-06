@@ -7,34 +7,40 @@
 <style>
   body {
     font-family: 'Segoe UI', sans-serif;
-    background: #f4f4f9;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     margin: 0;
+    color: #333;
   }
 
-  /* Top Header Bar */
+  /* Header Bar */
   header {
-    background-color: #4b49e8;
-    color: white;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    color: #fff;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 12px 24px;
+    padding: 14px 28px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.1);
   }
 
   .back-btn {
-    background-color: #00c27b;
+    background: #00c27b;
     color: white;
     border: none;
-    padding: 10px 18px;
-    border-radius: 8px;
+    padding: 10px 20px;
+    border-radius: 10px;
     cursor: pointer;
     font-size: 15px;
-    font-weight: bold;
+    font-weight: 600;
     text-decoration: none;
+    box-shadow: 0 4px 10px rgba(0,194,123,0.3);
+    transition: all 0.3s ease;
   }
-
   .back-btn:hover {
     background-color: #00a86b;
+    transform: translateY(-2px);
   }
 
   .header-title {
@@ -49,9 +55,12 @@
   }
 
   .search-container {
-    background-color: white;
+    background-color: rgba(255, 255, 255, 0.9);
     padding: 6px 10px;
-    border-radius: 6px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.1);
   }
 
   .search-container input {
@@ -60,22 +69,25 @@
     font-size: 15px;
     padding: 6px;
     width: 200px;
+    background: transparent;
   }
 
   table {
-    width: 95%;
-    margin: 30px auto;
+    width: 90%;
+    margin: 40px auto;
     border-collapse: collapse;
-    background: #fff;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    border-radius: 12px;
     overflow: hidden;
+    backdrop-filter: blur(8px);
   }
 
   th, td {
-    padding: 14px;
+    padding: 14px 16px;
     text-align: left;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    font-size: 15px;
   }
 
   th {
@@ -83,10 +95,11 @@
     color: white;
     cursor: pointer;
     user-select: none;
+    font-weight: 600;
   }
 
   tr:hover {
-    background-color: #f1f1f1;
+    background-color: rgba(103, 98, 240, 0.08);
   }
 
   @media (max-width: 768px) {
@@ -97,6 +110,9 @@
     }
     .header-title {
       text-align: left;
+    }
+    .search-container input {
+      width: 150px;
     }
   }
 </style>
@@ -128,7 +144,6 @@
 </table>
 
 <script>
-// ✅ API endpoint
 const apiUrl = 'https://7hlihj33zg.execute-api.eu-north-1.amazonaws.com/prod/students';
 
 fetch(apiUrl)
@@ -138,10 +153,7 @@ fetch(apiUrl)
     tbody.innerHTML = '';
 
     data.forEach(s => {
-      const createdAt = s.created_at
-        ? new Date(s.created_at).toLocaleString()
-        : '-';
-
+      const createdAt = s.created_at ? new Date(s.created_at).toLocaleString() : '-';
       const row = `
         <tr>
           <td>${s.name || '-'}</td>
@@ -154,12 +166,10 @@ fetch(apiUrl)
       tbody.innerHTML += row;
     });
 
-    // 🔍 Search by Name only
     const searchInput = document.getElementById('searchInput');
     searchInput.addEventListener('keyup', function() {
       const filter = this.value.toLowerCase();
       const rows = tbody.getElementsByTagName('tr');
-
       for (let i = 0; i < rows.length; i++) {
         const nameCell = rows[i].getElementsByTagName('td')[0];
         if (nameCell) {
@@ -171,12 +181,9 @@ fetch(apiUrl)
   })
   .catch(err => console.error('Error fetching students:', err));
 
-
-// ↕️ Sorting
 function sortTable(n) {
   const table = document.getElementById("studentTable");
   let switching = true, dir = "asc", switchcount = 0;
-
   while (switching) {
     switching = false;
     const rows = table.rows;
@@ -185,11 +192,9 @@ function sortTable(n) {
       const x = rows[i].getElementsByTagName("TD")[n];
       const y = rows[i + 1].getElementsByTagName("TD")[n];
       if (dir === "asc" && x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-        shouldSwitch = true;
-        break;
+        shouldSwitch = true; break;
       } else if (dir === "desc" && x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
-        shouldSwitch = true;
-        break;
+        shouldSwitch = true; break;
       }
     }
     if (shouldSwitch) {

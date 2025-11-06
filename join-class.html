@@ -3,68 +3,130 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Student Classes</title>
+<title>Student Classes | LMS Portal</title>
 <style>
-  body {
-    font-family: 'Segoe UI', sans-serif;
-    background: #f4f6fb;
+  * {
     margin: 0;
-    padding: 26px;
+    padding: 0;
+    box-sizing: border-box;
   }
+
+  body {
+    font-family: "Segoe UI", sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 60px 30px;
+    color: #333;
+  }
+
+  /* Back Button - top-left */
+  .back-btn {
+    position: fixed;
+    top: 25px;
+    left: 25px;
+    background: rgba(255, 255, 255, 0.9);
+    color: #333;
+    padding: 10px 18px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+  }
+
+  .back-btn:hover {
+    background: #fff;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+  }
+
   .wrap {
     max-width: 1000px;
-    margin: auto;
+    margin: 100px auto 40px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+    padding: 40px 50px;
+    animation: fadeIn 0.8s ease;
   }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
   h1 {
-    color: #123;
     text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+    font-size: 2rem;
   }
+
   table {
     width: 100%;
     border-collapse: collapse;
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 6px 24px rgba(15, 23, 42, 0.04);
-    text-align: center;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
   }
+
   th, td {
-    padding: 12px 14px;
-    border-bottom: 1px solid #f1f3f8;
+    padding: 14px 16px;
+    border-bottom: 1px solid #eaeaea;
+    text-align: center;
+    font-size: 1rem;
   }
+
   th {
-    background: #2563eb;
+    background: #667eea;
     color: #fff;
     cursor: pointer;
     user-select: none;
+    transition: background 0.3s ease;
   }
+
   th:hover {
-    background: #1d4ed8;
+    background: #5a6de0;
   }
+
+  tr:hover td {
+    background: rgba(102, 126, 234, 0.08);
+  }
+
   button {
-    padding: 8px 12px;
-    border-radius: 6px;
+    background: #667eea;
+    color: #fff;
     border: none;
-    color: #fff;
-    background: #2563eb;
+    border-radius: 8px;
+    padding: 10px 16px;
     cursor: pointer;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
   }
+
   button:hover {
-    background: #1d4ed8;
+    background: #5a6de0;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
   }
-  .back-btn {
-    display: inline-block;
-    background: #374151;
-    color: #fff;
-    padding: 8px 14px;
-    border-radius: 6px;
-    text-decoration: none;
-    font-size: 14px;
-    position: absolute;
-    top: 20px;
-    left: 20px;
+
+  td button:active {
+    transform: scale(0.97);
   }
-  .back-btn:hover {
-    background: #111827;
+
+  @media (max-width: 768px) {
+    .wrap {
+      padding: 25px;
+    }
+    th, td {
+      font-size: 0.9rem;
+      padding: 10px;
+    }
   }
 </style>
 </head>
@@ -142,7 +204,7 @@ async function joinClass(classId, joinUrl) {
 
     const result = await res.json();
     if (res.ok) {
-      alert(`✅ Attendance marked at ${result.joinTimeIST}`);
+      alert(`✅ Attendance marked at ${result.joinTimeIST || joinTimeIST}`);
     } else {
       alert(`⚠️ Error: ${result.error || "Failed to mark attendance"}`);
     }
